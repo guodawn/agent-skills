@@ -36,8 +36,12 @@ Do not skip a phase unless the user explicitly asks for a partial result.
 2. Replace every placeholder with real content derived from the user's request, follow-up answers, or explicit assumptions.
 3. Write the entire document in Chinese.
 4. Use professional product language and active voice.
-5. Save the document as `<需求名称>-prd.md`.
-6. Keep the requirement name short, specific, and file-system safe. Replace illegal path characters with `-` when needed.
+5. **路径约束**：文档输出目录必须固定为 `<当前项目根目录>/docs/requirements/`。
+   - "当前项目根目录"指调用本 skill 时所在的工程根目录（即用户当前操作的代码仓库根），不是 skill 自身所在的位置。
+   - 默认情况下不接受其他保存位置；仅当用户在本次调用中明确指定了其他目录时，才覆盖此约束，并在文档说明中注明实际使用的路径。
+6. **自动建目录**：若 `<当前项目根目录>/docs/requirements/` 不存在，则必须按需递归创建（包括 `docs/` 等所有缺失的父级目录），确认创建成功后再写入文档。
+7. 将文档统一保存为 `<当前项目根目录>/docs/requirements/<需求名称>-prd.md`。
+8. Keep the requirement name short, specific, and file-system safe. Replace illegal path characters with `-` when needed.
 
 ### Phase 3: Validate And Improve
 
@@ -91,6 +95,6 @@ Enforce these principles in every output:
 
 When responding after writing the file:
 
-1. State the saved file path.
+1. State the saved file path. The path must be reported in the form `<当前项目根目录>/docs/requirements/<需求名称>-prd.md`. If the user explicitly overrode the directory in this call, restate the actual absolute path that was used.
 2. Summarize the requirement name and any major assumptions.
 3. Call out unresolved items that still need stakeholder confirmation.
