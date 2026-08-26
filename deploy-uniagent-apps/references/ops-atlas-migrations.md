@@ -1,10 +1,22 @@
 # Operations Atlas migration gate
 
-`uniagent-ops-platform` uses Atlas with the `golang-migrate` source format. The canonical source is the release-matched `migrations/` directory, and Atlas' revision ledger records application. Read `uniagent-ops-platform/docker/atlas/README.md` for the current runner contract.
+The Operations backend uses Atlas with the `golang-migrate` source format. The canonical source is the release-matched `migrations/` directory, and Atlas' revision ledger records application. Do not depend on a particular checkout name or a sibling directory layout.
+
+Before deployment, resolve the approved Operations source repository once and use that path for every migration operation:
+
+```bash
+export OPS_SOURCE_DIR=/path/to/operations-backend-source
+OPS_SOURCE_DIR=$(git -C "$OPS_SOURCE_DIR" rev-parse --show-toplevel)
+test -f "$OPS_SOURCE_DIR/migrations/atlas.sum"
+test -f "$OPS_SOURCE_DIR/docker/atlas/README.md"
+```
+
+If these checks fail or multiple candidate repositories exist, stop and obtain the source path or release artifact. Never infer it from a name such as `uniagent-ops-platform`.
 
 Before deployment, from the same reviewed Operations source revision used for the image:
 
 ```bash
+cd "$OPS_SOURCE_DIR"
 make atlas-hash
 export UNIAGENT_OPS_ATLAS_DEV_URL='postgres://.../ops_atlas_dev?sslmode=disable'
 make migrate-validate

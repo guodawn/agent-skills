@@ -7,7 +7,7 @@ description: Build and deploy the UniAgent Apps HTTPS stack, including the requi
 
 Deploy the UniAgent Studio, Portal, Account, Operations, and IAM application stack from reviewed local source to an SSH target. Treat the remote `.env.apps` as protected deployment state and publish immutable image digests only.
 
-For any `uniagent-ops-platform` release, read [the migration workflow](references/ops-atlas-migrations.md) before staging files. The Operations application must never be started before its approved pending Atlas migrations complete.
+For any Operations backend release, resolve the selected source checkout as `OPS_SOURCE_DIR`, then read [the migration workflow](references/ops-atlas-migrations.md) before staging files. The Operations application must never be started before its approved pending Atlas migrations complete. Directory names and sibling layouts are not deployment contracts.
 
 ## Required controls
 
@@ -24,4 +24,3 @@ For any `uniagent-ops-platform` release, read [the migration workflow](reference
 3. Back up and stage Compose, Nginx, and the authorized environment manifest.
 4. For Operations backend releases, stage the release-matched `migrations/` source and complete the Atlas gate.
 5. Pull by digest, start services, and verify health plus the requested functional flow.
-
