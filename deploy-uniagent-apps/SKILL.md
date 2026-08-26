@@ -9,6 +9,8 @@ Deploy the UniAgent Studio, Portal, Account, Operations, and IAM application sta
 
 Resolve source repositories by release role, not by checkout name or sibling layout. Set only the required roots (`STUDIO_SOURCE_DIR`, `FRONTEND_SOURCE_DIR`, `DESIGN_SOURCE_DIR`, `OPS_SOURCE_DIR`, `IAM_SOURCE_DIR`), normalize each with `git -C "$DIR" rev-parse --show-toplevel`, and verify the selected build entrypoint beneath it. If a role is ambiguous, request its source path or release artifact rather than guessing.
 
+Lock every source role to an immutable commit before inspecting or building. By default, fetch `origin` and use its advertised default branch (`origin/HEAD`) at that time. `SOURCE_REF` selects a release-wide branch, tag, or commit; `STUDIO_SOURCE_REF`, `FRONTEND_SOURCE_REF`, `DESIGN_SOURCE_REF`, `OPS_SOURCE_REF`, and `IAM_SOURCE_REF` override a single role. Build from detached temporary worktrees at the resolved commits, never a developer's mutable checkout. Read [source version locking](references/source-version-locking.md) for the procedure.
+
 For any Operations backend release, resolve the selected source checkout as `OPS_SOURCE_DIR`, then read [the migration workflow](references/ops-atlas-migrations.md) before staging files. The Operations application must never be started before its approved pending Atlas migrations complete.
 
 ## Required controls
@@ -21,7 +23,7 @@ For any Operations backend release, resolve the selected source checkout as `OPS
 
 ## Deployment order
 
-1. Validate source, Compose interpolation, target access, and the candidate immutable image digest.
+1. Resolve and lock source commits, then validate release worktrees, Compose interpolation, target access, and the candidate immutable image digest.
 2. Build and push only the requested services, recording their digests.
 3. Back up and stage Compose, Nginx, and the authorized environment manifest.
 4. For Operations backend releases, stage the release-matched `migrations/` source and complete the Atlas gate.
