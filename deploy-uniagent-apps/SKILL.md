@@ -7,7 +7,9 @@ description: Build and deploy the UniAgent Apps HTTPS stack, including the requi
 
 Deploy the UniAgent Studio, Portal, Account, Operations, and IAM application stack from reviewed local source to an SSH target. Treat the remote `.env.apps` as protected deployment state and publish immutable image digests only.
 
-For any Operations backend release, resolve the selected source checkout as `OPS_SOURCE_DIR`, then read [the migration workflow](references/ops-atlas-migrations.md) before staging files. The Operations application must never be started before its approved pending Atlas migrations complete. Directory names and sibling layouts are not deployment contracts.
+Resolve source repositories by release role, not by checkout name or sibling layout. Set only the required roots (`STUDIO_SOURCE_DIR`, `FRONTEND_SOURCE_DIR`, `DESIGN_SOURCE_DIR`, `OPS_SOURCE_DIR`, `IAM_SOURCE_DIR`), normalize each with `git -C "$DIR" rev-parse --show-toplevel`, and verify the selected build entrypoint beneath it. If a role is ambiguous, request its source path or release artifact rather than guessing.
+
+For any Operations backend release, resolve the selected source checkout as `OPS_SOURCE_DIR`, then read [the migration workflow](references/ops-atlas-migrations.md) before staging files. The Operations application must never be started before its approved pending Atlas migrations complete.
 
 ## Required controls
 
