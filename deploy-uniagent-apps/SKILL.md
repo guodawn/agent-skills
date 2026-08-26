@@ -19,6 +19,7 @@ For any Operations backend release, resolve the selected source checkout as `OPS
 - Do not print, commit, or copy deployment Secret values. Back up live Compose, Nginx, and `.env.apps` before promotion.
 - Use `docker compose --env-file .env.apps` consistently. Do not reset databases, delete volumes, or manually run a single migration SQL file.
 - Applying target migrations is a database mutation: require explicit authorization for the selected target. A failed migration or pending revision blocks the Operations backend rollout.
+- Before promoting IAM against a persistent authority database, run the repository's first-party bootstrap regression on a disposable database. It must provision the same first-party clients twice and exercise changed public-origin/redirect input. Do not impose a Skill-level "exactly one migration" or single-baseline assumption: use the reviewed repository's declared, ordered migration chain. If its regression rejects a legitimate appended migration because its test fixture only accepts one baseline, stop the IAM release until the repository test and migration contract are aligned; do not bypass the failed regression, delete authority rows, or regenerate persistent PEM files as a workaround.
 - Report image digests, backup path, redacted migration evidence, service health, and any checks not run.
 
 ## Deployment order
