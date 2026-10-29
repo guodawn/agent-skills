@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>低保真线框 · 起点模板</title>
+<!--
+  用法：复制本文件，替换 .screen 里的区块内容。
+  约定（见 references/wireframe.md）：
+    · 灰阶 + 系统字体 + 细边框，不用阴影/渐变/品牌色
+    · 状态不用颜色：异常=斜纹 / 待补=虚线 / 当前项=反白 / 不可用=灰字
+    · 真实文案，不写 lorem ipsum
+    · 每个区块带 <span class="a">n</span> 批注号，屏底 .notes 对照
+    · 单文件自包含，← → 切屏，Ctrl/Cmd+P 可直接打印
+-->
+<style>
+  :root{
+    --ink:#1a1a1a; --ink2:#555; --ink3:#8a8a8a;
+    --line:#9a9a9a; --line2:#c8c8c8; --bg:#f2f2f2; --panel:#fff; --fill:#e6e6e6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:13px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  .top{max-width:1320px;margin:0 auto;padding:20px 20px 0}
+  .top h1{font-size:16px;font-weight:600;margin:0 0 4px}
+  .top .sub{font-size:12px;color:var(--ink2);margin:0 0 14px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tabs button{font:inherit;font-size:12px;padding:6px 12px;background:#fff;
+    border:1px solid var(--line2);color:var(--ink2);cursor:pointer}
+  .tabs button[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .legend{font-size:11.5px;color:var(--ink3);display:flex;flex-wrap:wrap;gap:16px;
+    margin:0 0 14px;padding-bottom:14px;border-bottom:1px solid var(--line2)}
+  .sw{display:inline-block;width:22px;height:10px;vertical-align:-1px;margin-right:4px;
+    border:1px solid var(--line)}
+  .sw-bad{background:repeating-linear-gradient(45deg,#bdbdbd 0 3px,#e6e6e6 3px 6px)}
+  .sw-todo{background:#fff;border-style:dashed}
+  main{max-width:1320px;margin:0 auto;padding:0 20px 60px}
+  .screen{display:none}
+  .screen.active{display:block}
+  .frame{background:var(--panel);border:1px solid var(--line);margin-bottom:18px}
+  .titlebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 14px;
+    background:var(--fill);border-bottom:1px solid var(--line);font-size:12px}
+  .titlebar .name{font-weight:600}
+  .titlebar .meta{color:var(--ink2)}
+  .titlebar .right{margin-left:auto;display:flex;gap:8px}
+  .body{padding:14px}
+  .box{border:1px solid var(--line2);padding:10px;background:#fff}
+  .box.dash{border-style:dashed}
+  .box.strong{border:2px double var(--line)}
+  .cap{font-size:11px;color:var(--ink3);margin:0 0 8px;display:flex;align-items:center;gap:6px}
+  .cap b{font-weight:600;color:var(--ink2);font-size:11.5px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .grow{flex:1 1 0;min-width:0}
+  .stack>*+*{margin-top:12px}
+  .btn{display:inline-block;padding:5px 12px;border:1px solid var(--ink);background:#fff;font-size:12px}
+  .btn.lead{border-width:2px;font-weight:600}
+  .btn.ghost{border-color:var(--line2);color:var(--ink3)}
+  .btn.sm{padding:2px 8px;font-size:11px}
+  .tag{display:inline-block;padding:1px 6px;border:1px solid var(--line);font-size:11px;
+    margin:0 4px 3px 0;background:#fff}
+  .tag.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tag.dash{border-style:dashed;color:var(--ink3)}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{border:1px solid var(--line2);padding:5px 7px;text-align:left;vertical-align:top}
+  th{background:var(--fill);font-weight:500;font-size:11.5px;color:var(--ink2);white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr.bad td{background:repeating-linear-gradient(45deg,#e2e2e2 0 3px,#f7f7f7 3px 6px)}
+  .muted{color:var(--ink3)}
+  .ph{background:repeating-linear-gradient(45deg,#e0e0e0 0 6px,#f4f4f4 6px 12px);
+    border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;
+    font-size:11px;color:var(--ink2);text-align:center;padding:8px;height:160px}
+  .a{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+    border-radius:50%;background:var(--ink);color:#fff;font-size:9.5px;font-weight:600;
+    vertical-align:2px;margin-left:4px}
+  .notes{list-style:none;counter-reset:n;margin:14px 0 0;padding:12px 14px;
+    border-top:1px dashed var(--line2);background:#fafafa}
+  .notes li{counter-increment:n;font-size:11.5px;color:var(--ink2);
+    padding-left:22px;position:relative;margin:0 0 5px}
+  .notes li::before{content:counter(n);position:absolute;left:0;top:1px;width:15px;height:15px;
+    border-radius:50%;background:var(--ink);color:#fff;font-size:9.5px;font-weight:600;
+    text-align:center;line-height:15px}
+  .kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:2px;
+    padding:0 5px;font-size:10.5px;font-family:ui-monospace,Menlo,monospace;background:#fff}
+  @media (max-width:900px){.row{display:block}.row>*+*{margin-top:12px}}
+  @media print{body{background:#fff}.tabs,.legend{display:none}
+    .screen{display:block!important;page-break-after:always}.frame{border-color:#000}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>〔项目名〕低保真线框 v1</h1>
+  <p class="sub">对应故事集 N 张卡 ｜ M 屏 ｜ 日期 ｜ 仅表达信息层级与行为，不做视觉设计</p>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-t="A">A 主工作台</button>
+    <button role="tab" aria-selected="false" data-t="B">B 详情页</button>
+  </div>
+  <p class="legend">
+    <span><i class="sw"></i>常规区块</span>
+    <span><i class="sw sw-bad"></i>异常 / 未过（斜纹，不靠颜色）</span>
+    <span><i class="sw sw-todo"></i>待补 / 占位（虚线）</span>
+    <span><span class="a">n</span> 批注（屏底对照）</span>
+    <span>快捷键：← → 切屏</span>
+  </p>
+</div>
+
+<main>
+
+<section class="screen active" id="s-A" role="tabpanel" aria-label="屏 A">
+  <div class="frame">
+    <div class="titlebar">
+      <span class="name">〔界面名〕</span>
+      <span class="meta">〔对象〕｜〔关键上下文〕</span>
+      <span class="right"><span class="tag">状态标签</span><span class="btn sm">主操作</span></span>
+    </div>
+    <div class="body stack">
+
+      <div class="row">
+        <div class="box grow" style="flex:2 1 420px">
+          <p class="cap"><b>〔区块名〕</b><span class="a">1</span></p>
+          <table>
+            <tr><th>项</th><th class="num">实测</th><th>判定</th></tr>
+            <tr><td>正常项</td><td class="num">1.00</td><td>通过</td></tr>
+            <tr class="bad"><td>异常项</td><td class="num">3.00</td><td>不达标 <span class="a">2</span></td></tr>
+          </table>
+        </div>
+        <div class="box grow">
+          <p class="cap"><b>〔侧栏区块〕</b></p>
+          <p class="muted" style="font-size:11.5px;margin:0">不可用时写原因，不写 0 <span class="a">3</span></p>
+        </div>
+      </div>
+
+      <div class="box">
+        <p class="cap"><b>〔列表 / 表格区块〕</b></p>
+        <table>
+          <tr><th>列 1</th><th>列 2</th><th class="num">列 3</th></tr>
+          <tr><td>值</td><td><span class="tag">标签</span><span class="tag dash">待补</span></td><td class="num">0.00</td></tr>
+          <tr><td colspan="3" class="muted">… 共 N 行</td></tr>
+        </table>
+      </div>
+
+      <div class="box dash">
+        <p class="cap"><b>空态示意</b></p>
+        <p class="muted" style="font-size:11.5px;margin:0">〔无数据时的文案，以及此时仍可用的入口〕</p>
+      </div>
+
+    </div>
+    <ol class="notes">
+      <li>批注写「为什么这样排」，不写「这是什么」。</li>
+      <li>异常行用斜纹 + 文字，不用红色。</li>
+      <li>「不可用」与「0」必须在视觉上可区分。</li>
+    </ol>
+  </div>
+</section>
+
+<section class="screen" id="s-B" role="tabpanel" aria-label="屏 B">
+  <div class="frame">
+    <div class="titlebar">
+      <span class="name">〔详情页名〕</span>
+      <span class="right"><span class="btn sm ghost">次要操作</span></span>
+    </div>
+    <div class="body stack">
+      <div class="ph">〔影像 / 图表占位：标注类型与尺寸约束〕</div>
+      <div class="box">
+        <p class="cap"><b>〔判定区〕</b></p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="tag">选项一</span>
+          <span class="tag cur">当前项 · 已选</span>
+          <span class="tag">选项三</span>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="btn lead">主判定 <span class="kbd">空格</span></span>
+          <span class="btn">次判定 <span class="kbd">2</span></span>
+          <span class="btn">例外判定 <span class="kbd">3</span></span>
+        </div>
+        <p class="muted" style="font-size:11px;margin:8px 0 0">
+          判定动作视觉等权；例外项不得做成次要按钮
+        </p>
+      </div>
+    </div>
+    <ol class="notes">
+      <li>当前项反白，其余浅色标签。</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.tabs button'));
+  var screens=[].slice.call(document.querySelectorAll('.screen'));
+  function show(id){
+    tabs.forEach(function(b){b.setAttribute('aria-selected',String(b.dataset.t===id));});
+    screens.forEach(function(s){s.classList.toggle('active',s.id==='s-'+id);});
+    try{history.replaceState(null,'','#'+id);}catch(e){}
+    window.scrollTo(0,0);
+  }
+  tabs.forEach(function(b){
+    b.addEventListener('click',function(){show(b.dataset.t);});
+    b.addEventListener('keydown',function(e){
+      var i=tabs.indexOf(b);
+      if(e.key==='ArrowRight'){e.preventDefault();tabs[(i+1)%tabs.length].click();}
+      if(e.key==='ArrowLeft'){e.preventDefault();tabs[(i-1+tabs.length)%tabs.length].click();}
+    });
+  });
+  var h=(location.hash||'').replace('#','').replace(/^s-/,'');
+  if(tabs.some(function(b){return b.dataset.t===h;})){show(h);}
+})();
+</script>
+</body>
+</html>
